@@ -13,7 +13,7 @@ public class Player
     float[] tier5 = new float[] { 50, 50 };
 
 
-    Player()
+    public Player()
     {
 
     }
