@@ -2,44 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class Player
-{
-    int level;
-    float[] tier1 = new float[] { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
-    float[] tier2 = new float[] { 20, 20, 20, 20, 20 };
-    float[] tier3 = new float[] { 25, 25, 25, 25 };
-    float[] tier4 = new float[] { 100/3, 100/3, 100/3 };
-    float[] tier5 = new float[] { 50, 50 };
-
-
-    public Player()
-    {
-
-    }
-
-    public int getLevel() { return level; }
-
-    public float[] getRatesForUnitTier(int unitTier)
-    {
-        switch (unitTier)
-        {
-            case 1:
-                return tier1;
-            case 2:
-                return tier2;
-            case 3:
-                return tier3;
-            case 4:
-                return tier4;
-            case 5:
-                return tier5;
-            default:
-                return null;
-        }
-    }
-}
-
 public abstract class Unit
 {
     public int health, attack, mana, range, cost;

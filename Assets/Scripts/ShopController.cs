@@ -4,21 +4,26 @@ using UnityEngine;
 
 public class ShopController : MonoBehaviour
 {
-    public GameObject shop, bench;
-    private bool isShowing = false;
+    public GameObject shop, board;
+    private bool isShowing = true;
 
     void Start()
     {
-        shop.SetActive(isShowing);
-        bench.SetActive(true);
+        setState();
     }
 
     void Update()
     {
-        if (Input.GetKeyDown("space"))
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
             isShowing = !isShowing;
-            shop.SetActive(isShowing);
+            setState();
         }
+    }
+
+    private void setState()
+    {
+        shop.SetActive(!isShowing);
+        board.SetActive(isShowing);
     }
 }
