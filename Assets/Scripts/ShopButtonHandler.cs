@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ShopButtonHandler : MonoBehaviour
 {
     public float AlphaThreshold = 0.1f;
-    public PlayerInfo playerObj;
+    public Player player;
 
     public BenchManager benchManager;
 
@@ -26,9 +26,9 @@ public class ShopButtonHandler : MonoBehaviour
 
     public void buyUnit()
     {
-        if (unit != null && playerObj.getPlayer().canAfford(unit.cost) && benchManager.addToBench(unit))
+        if (unit != null && player.canAfford(unit.cost) && benchManager.addToBench(unit))
         {
-            playerObj.getPlayer().spend(unit.cost);
+            player.spend(unit.cost);
             resetDefault();
         }
     }

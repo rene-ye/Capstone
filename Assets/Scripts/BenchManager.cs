@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class BenchManager : MonoBehaviour, IDropHandler
+public class BenchManager : MonoBehaviour
 {
     static BenchButtonHandler[] bench = null;
     public GameObject one, two, three, four, five, six, seven, eight, nine, ten;
@@ -36,16 +36,5 @@ public class BenchManager : MonoBehaviour, IDropHandler
     void Update()
     {
         
-    }
-
-    public void OnDrop(PointerEventData eventData)
-    {
-        RectTransform benchPanel = transform as RectTransform;
-
-        if (!RectTransformUtility.RectangleContainsScreenPoint(benchPanel, Input.mousePosition))
-        {
-            // remove item from inventory
-            Debug.Log("DROP");
-        }
     }
 }

@@ -4,18 +4,19 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class BenchButtonHandler : MonoBehaviour, IDragHandler, IEndDragHandler
+public class BenchButtonHandler : MonoBehaviour
 {
     public float AlphaThreshold = 0.1f;
+    public Player player;
+
+    public GameObject bench, trash;
 
     private Unit unit = null;
-    private Vector3 startPos;
 
     // Start is called before the first frame update
     void Start()
     {
         this.GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaThreshold;
-        startPos = this.GetComponent<Image>().transform.position;
     }
 
     // Update is called once per frame
@@ -35,13 +36,32 @@ public class BenchButtonHandler : MonoBehaviour, IDragHandler, IEndDragHandler
         return (unit == null);
     }
 
-    public void OnDrag(PointerEventData eventData)
+    private void resetDefault()
     {
-        this.GetComponent<Image>().transform.position = Input.mousePosition;
+        this.unit = null;
+        this.gameObject.GetComponent<Image>().sprite = UnitSpritePool.getDefaultBench();
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    public void onClick()
     {
-        this.GetComponent<Image>().transform.position = startPos;
+        if (unit != null)
+        {
+            player.SetActiveUnit(unit, this.gameObject);
+            player.rgo = new Player.ResetGameObject(resetDefault);
+        }
+        else if (player.getActiveUnit() != null)
+        {
+            if (player.activeUnitObject == this.gameObject)
+            {
+                player.clearActiveUnit();
+                player.activeUnitObject.GetComponent<Image>().color = Color.white;
+                player.rgo();
+            }
+
+            setUnit(player.getActiveUnit());
+            player.clearActiveUnit();
+            player.activeUnitObject.GetComponent<Image>().color = Color.white;
+            player.rgo();
+        }
     }
 }
