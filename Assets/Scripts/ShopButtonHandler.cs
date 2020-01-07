@@ -53,7 +53,7 @@ public static class UnitSpritePool
         pool = new Dictionary<string, Sprite>();
         // Ok now we have to load and assign our sprites
         string[] unitList = { "Axe", "Bounty", "Ogre", "Clock", "Walrus", "Inventor", "Hunter", "Exorcist",
-            "Rider", "Enchantress", "Maiden", "Blademaster", "Queen", "Elemental", "Prophet", "Fiend", "Sniper",
+            "Rider", "Enchantress", "Maiden", "Blademaster", "Queen", "Elemental", "Prophet", "Fiend", "Sniper", "Gandalf",
             "Wolverine", "Admiral", "Troll", "Medusa", "Zeus", "Dematerializer" };
         foreach (string str in unitList)
         {

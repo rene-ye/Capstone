@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class HexGM : MonoBehaviour
 {
     public GameObject shop, ally, enemy;
+    public RefreshButtonHandler rbh;
     public Player p;
 
     private bool isShowing = true;
@@ -70,9 +71,14 @@ public class HexGM : MonoBehaviour
             {
                 enemy.transform.localScale = Vector3.zero;
             }
-            p.addInterest();
+            endBattleRoundTasks();
         } else
         {
+            if (p.getActiveUnit() != null)
+            {
+                p.clearActiveUnit();
+                p.activeUnitObject.GetComponent<Image>().color = Color.white;
+            }
             roundText.text = battleText;
             if (isShowing)
             {
@@ -86,5 +92,12 @@ public class HexGM : MonoBehaviour
     public static bool isShoppingRound()
     {
         return isBuyRound;
+    }
+
+    private void endBattleRoundTasks()
+    {
+        p.addInterest();
+        rbh.rerollShop(0);
+        p.gainExp(1);
     }
 }

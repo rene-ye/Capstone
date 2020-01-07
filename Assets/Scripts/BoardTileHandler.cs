@@ -17,7 +17,10 @@ public class BoardTileHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (!HexGM.isShoppingRound())
+        {
+            // unit attack nearest target
+        }
     }
 
     public void onClick()

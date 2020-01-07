@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    public Slider slider;
+    public Text levelTextBox;
+
     int level, gold, exp;
     float[] tier1 = new float[] { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
     float[] tier2 = new float[] { 20, 20, 20, 20, 20 };
@@ -12,10 +15,13 @@ public class Player : MonoBehaviour
     float[] tier4 = new float[] { 100 / 3, 100 / 3, 100 / 3 };
     float[] tier5 = new float[] { 50, 50 };
 
+    static int[] expRequired = new int[] { 1, 2, 4, 8, 12, 16, 20, 24, 32, 40 };
+    public const int MAX_LEVEL = 10;
+
     public Player()
     {
         level = 1;
-        gold = 60;
+        gold = 5000;
         exp = 0;
     }
 
@@ -60,6 +66,33 @@ public class Player : MonoBehaviour
         } else
         {
             return false;
+        }
+    }
+
+    public void gainExp(int i)
+    {
+        if (this.level < MAX_LEVEL)
+        {
+            this.exp += i;
+            checkLevel();
+            slider.value = (float)this.exp / expRequired[this.level - 1];
+        }
+    }
+
+    public int getExp()
+    {
+        return exp;
+    }
+
+    private void checkLevel()
+    {
+        int required = expRequired[level - 1];
+        while(this.exp >= required)
+        {
+            this.level++;
+            levelTextBox.text = this.level.ToString();
+            this.exp -= required;
+            required = expRequired[level - 1];
         }
     }
 

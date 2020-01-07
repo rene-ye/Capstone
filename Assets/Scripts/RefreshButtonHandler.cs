@@ -25,11 +25,11 @@ public class RefreshButtonHandler : MonoBehaviour
         }
     }
 
-    public void rerollShop()
+    public void rerollShop(int cost)
     {
-        if (p.canAfford(REROLL_COST))
+        if (p.canAfford(cost))
         {
-            p.spend(REROLL_COST);
+            p.spend(cost);
             foreach (Button b in shopButtons)
             {
                 b.GetComponent<ShopButtonHandler>().setUnit(UnitFactory.rollUnit(p));
