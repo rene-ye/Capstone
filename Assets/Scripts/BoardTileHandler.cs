@@ -5,13 +5,16 @@ using UnityEngine.UI;
 
 public class BoardTileHandler : MonoBehaviour
 {
+    public float AlphaThreshold = 0.1f;
     public Player player;
     private Unit unit = null;
 
+    private AllyBoard ally;
     // Start is called before the first frame update
     void Start()
     {
-        
+        this.GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaThreshold;
+        ally = transform.parent.GetComponent<AllyBoard>();
     }
 
     // Update is called once per frame
@@ -29,21 +32,20 @@ public class BoardTileHandler : MonoBehaviour
         {
             if (unit != null)
             {
-                player.SetActiveUnit(unit, this.gameObject);
-                player.rgo = new Player.ResetGameObject(resetDefault);
+                if (GameObject.ReferenceEquals(player.activeUnitObject, this.gameObject)) {
+                    // deselect
+                    player.clearActiveUnit();
+                    this.gameObject.GetComponent<Image>().color = unit.getTierColor();
+                } else
+                {
+                    player.SetActiveUnit(unit, this.gameObject);
+                    player.rgo = new Player.ResetGameObject(resetDefault);
+                }
             }
             else if (player.getActiveUnit() != null)
             {
-                if (player.activeUnitObject == this.gameObject)
-                {
-                    player.clearActiveUnit();
-                    player.activeUnitObject.GetComponent<Image>().color = Color.white;
-                    player.rgo();
-                }
-
                 setUnit(player.getActiveUnit());
                 player.clearActiveUnit();
-                player.activeUnitObject.GetComponent<Image>().color = Color.white;
                 player.rgo();
             }
         }
@@ -51,13 +53,21 @@ public class BoardTileHandler : MonoBehaviour
 
     private void setUnit(Unit u)
     {
+        ally.checkBoardForThreeUnits(u);
         unit = u;
         this.gameObject.GetComponent<Image>().sprite = UnitSpritePool.getSprite(unit.unit_name);
+        this.gameObject.GetComponent<Image>().color = unit.getTierColor();
     }
 
-    private void resetDefault()
+    public void resetDefault()
     {
         this.unit = null;
         this.gameObject.GetComponent<Image>().sprite = UnitSpritePool.getDefaultBench();
+        this.gameObject.GetComponent<Image>().color = Color.white;
+    }
+
+    public Unit getCurrentUnit()
+    {
+        return unit;
     }
 }

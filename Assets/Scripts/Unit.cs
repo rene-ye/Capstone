@@ -5,7 +5,31 @@ using UnityEngine;
 public abstract class Unit
 {
     public int health, attack, mana, range, cost;
+    public int tier = 1;
     public string unit_name, unit_asset_location;
+
+    public void rankUp()
+    {
+        if (this.tier < 3)
+        {
+            this.health = this.health * 2;
+            this.attack = this.attack * 2;
+            this.tier++;
+        }
+    }
+
+    public static bool sameType(Unit a, Unit b)
+    {
+        if (null == a || null == b)
+            return false;
+        return a.unit_name.Equals(b.unit_name) && (a.tier == b.tier);
+    }
+
+    static Color[] colors = new Color[] { Color.white, Color.yellow, Color.red };
+    public Color getTierColor()
+    {
+        return colors[tier -1];
+    }
 }
 
 public static class UnitFactory

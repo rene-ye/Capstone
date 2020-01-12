@@ -8,10 +8,10 @@ public class HexGM : MonoBehaviour
     public GameObject shop, ally, enemy;
     public RefreshButtonHandler rbh;
     public Player p;
+    public const float roundTimer = 600;
 
     private bool isShowing = true;
     private static bool isBuyRound = true;
-    const float roundTimer = 5;
 
     private float roundTimeLeft = 0.0f;
     private Text timerText = null;

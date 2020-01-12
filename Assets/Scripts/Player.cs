@@ -127,7 +127,7 @@ public class Player : MonoBehaviour
         if (activeUnit != null)
         {
             // unhighlight the last active unit
-            activeUnitObject.GetComponent<Image>().color = Color.white;
+            activeUnitObject.GetComponent<Image>().color = activeUnit.getTierColor();
         }
         activeUnit = u;
         activeUnitObject = go;
@@ -142,5 +142,7 @@ public class Player : MonoBehaviour
     public void clearActiveUnit()
     {
         activeUnit = null;
+        activeUnitObject.GetComponent<Image>().color = Color.white;
+        activeUnitObject = null;
     }
 }

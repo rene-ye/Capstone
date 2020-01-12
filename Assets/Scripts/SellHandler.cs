@@ -31,7 +31,6 @@ public class SellHandler : MonoBehaviour
         {
             player.gain(u.cost);
             player.clearActiveUnit();
-            player.activeUnitObject.GetComponent<Image>().color = Color.white;
             player.rgo();
         }
     }

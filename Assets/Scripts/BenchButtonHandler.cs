@@ -29,6 +29,7 @@ public class BenchButtonHandler : MonoBehaviour
     {
         unit = u;
         this.gameObject.GetComponent<Image>().sprite = UnitSpritePool.getSprite(unit.unit_name);
+        this.gameObject.GetComponent<Image>().color = unit.getTierColor();
     }
 
     public bool isEmpty()
@@ -40,27 +41,27 @@ public class BenchButtonHandler : MonoBehaviour
     {
         this.unit = null;
         this.gameObject.GetComponent<Image>().sprite = UnitSpritePool.getDefaultBench();
+        this.gameObject.GetComponent<Image>().color = Color.white;
     }
 
     public void onClick()
     {
         if (unit != null)
         {
-            player.SetActiveUnit(unit, this.gameObject);
-            player.rgo = new Player.ResetGameObject(resetDefault);
+            if (GameObject.ReferenceEquals(player.activeUnitObject, this.gameObject)) {
+                // deselect
+                player.clearActiveUnit();
+                this.gameObject.GetComponent<Image>().color = unit.getTierColor();
+            } else
+            {
+                player.SetActiveUnit(unit, this.gameObject);
+                player.rgo = new Player.ResetGameObject(resetDefault);
+            }
         }
         else if (player.getActiveUnit() != null)
         {
-            if (player.activeUnitObject == this.gameObject)
-            {
-                player.clearActiveUnit();
-                player.activeUnitObject.GetComponent<Image>().color = Color.white;
-                player.rgo();
-            }
-
             setUnit(player.getActiveUnit());
             player.clearActiveUnit();
-            player.activeUnitObject.GetComponent<Image>().color = Color.white;
             player.rgo();
         }
     }

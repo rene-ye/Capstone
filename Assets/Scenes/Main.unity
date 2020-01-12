@@ -207,7 +207,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5865873}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 602, y: 249, z: -1005}
+  m_LocalPosition: {x: 489.9, y: 235.07, z: -1005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 282100309}
@@ -1398,6 +1398,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &218701354
 GameObject:
@@ -2077,6 +2078,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &389339806
 GameObject:
@@ -2370,6 +2372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &415254613
 GameObject:
@@ -2515,6 +2518,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &418336170
 GameObject:
@@ -2604,6 +2608,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!114 &418336175
 MonoBehaviour:
@@ -3011,6 +3016,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &525421751
 GameObject:
@@ -3894,6 +3900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &713551580
 GameObject:
@@ -4266,6 +4273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &789522173
 GameObject:
@@ -4633,6 +4641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &818529775
 GameObject:
@@ -4778,6 +4787,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &820091851
 GameObject:
@@ -4923,6 +4933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &838010836
 GameObject:
@@ -5142,6 +5153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &924293031
 GameObject:
@@ -5287,6 +5299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &983645781
 GameObject:
@@ -5929,6 +5942,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!114 &1223063846
 MonoBehaviour:
@@ -6386,6 +6400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &1294654967
 GameObject:
@@ -6639,6 +6654,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &1391661654
 GameObject:
@@ -6723,6 +6739,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1426104745}
+  - component: {fileID: 1426104746}
   m_Layer: 5
   m_Name: Board
   m_TagString: Untagged
@@ -6751,6 +6768,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1426104746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1426104744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e51db6a85f92af4429afccc60cb6dd31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ally: {fileID: 1427400401}
+  enemy: {fileID: 453963776}
 --- !u!1 &1427400401
 GameObject:
   m_ObjectHideFlags: 0
@@ -7335,6 +7366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &1546478223
 GameObject:
@@ -7633,6 +7665,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &1714342892
 GameObject:
@@ -8362,6 +8395,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &1954853302
 GameObject:
@@ -8507,6 +8541,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &1960285638
 GameObject:
@@ -8712,6 +8747,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!114 &2000822662
 MonoBehaviour:
@@ -8950,6 +8986,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &2059852270
 GameObject:
@@ -9242,6 +9279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fadfa6dfc6c334986eea3d8807e5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlphaThreshold: 0.1
   player: {fileID: 282100308}
 --- !u!1 &2136079581
 GameObject:
