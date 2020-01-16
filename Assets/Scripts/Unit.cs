@@ -4,9 +4,24 @@ using UnityEngine;
 
 public abstract class Unit
 {
+    public const int WEIGHT_DEFAULT = 5;
+    public const int WEIGHT_MAX = 99;
+
     public int health, attack, mana, range, cost;
     public int tier = 1;
     public string unit_name, unit_asset_location;
+    // frequency of bullets generated
+    public float attackSpeed = 1;
+    // velocity of the bullet
+    public float projectileSpeed = 1;
+    // weight of the unit
+    public int weight = WEIGHT_DEFAULT;
+
+    public bool isAlly = true;
+
+    public int currentHealth, currentMana;
+
+    private float timeOfLastAttack = 0.0f;
 
     public void rankUp()
     {
@@ -29,6 +44,22 @@ public abstract class Unit
     public Color getTierColor()
     {
         return colors[tier -1];
+    }
+
+    public void resetForCombat()
+    {
+        currentHealth = health;
+        currentMana = 0;
+    }
+
+    public bool readyToAttack()
+    {
+        if (Time.time - timeOfLastAttack > attackSpeed)
+        {
+            timeOfLastAttack = Time.time;
+            return true;
+        }
+        return false;
     }
 }
 

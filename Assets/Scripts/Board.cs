@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AllyBoard : MonoBehaviour
+public class Board : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -36,6 +36,22 @@ public class AllyBoard : MonoBehaviour
                 sameUnits[1].GetComponent<BoardTileHandler>().resetDefault();
                 u.rankUp();
                 checkBoardForThreeUnits(u);
+            }
+        }
+    }
+
+    public void initAllUnits()
+    {
+        foreach(Transform child in transform)
+        {
+            BoardTileHandler b = child.gameObject.GetComponent<BoardTileHandler>();
+            if (b != null)
+            {
+                Unit u = b.getCurrentUnit();
+                if (u != null)
+                {
+                    u.resetForCombat();
+                }
             }
         }
     }

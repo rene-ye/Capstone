@@ -5,10 +5,11 @@ using UnityEngine.UI;
 
 public class HexGM : MonoBehaviour
 {
-    public GameObject shop, ally, enemy;
+    public GameObject shop;
+    public Board ally, enemy;
     public RefreshButtonHandler rbh;
     public Player p;
-    public const float roundTimer = 600;
+    public const float roundTimer = 5;
 
     private bool isShowing = true;
     private static bool isBuyRound = true;
@@ -74,10 +75,12 @@ public class HexGM : MonoBehaviour
             endBattleRoundTasks();
         } else
         {
+            ally.initAllUnits();
+            enemy.initAllUnits();
             if (p.getActiveUnit() != null)
             {
-                p.clearActiveUnit();
                 p.activeUnitObject.GetComponent<Image>().color = Color.white;
+                p.clearActiveUnit();
             }
             roundText.text = battleText;
             if (isShowing)
