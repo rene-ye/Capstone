@@ -10,5 +10,8 @@ public interface BaseTileHandler
     Vector2Int getCoordinate();
     Unit getCurrentUnit();
     int getNodeWeight();
+    void takeDamage(int attack);
+    void resetDefault();
+    void setUnit(Unit u);
 }
 

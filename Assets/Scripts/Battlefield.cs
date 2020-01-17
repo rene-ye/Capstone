@@ -36,6 +36,17 @@ public class Battlefield : MonoBehaviour
         }
     }
 
+    public static void initAllUnits()
+    {
+        foreach (BaseTileHandler b in tileMap.Values)
+        {
+            Unit u = b.getCurrentUnit();
+            if (u != null)
+            {
+                u.resetForCombat();
+            }
+        }
+    }
 
     public static int[,] generateWeightedGraph()
     {
@@ -65,8 +76,10 @@ public class Battlefield : MonoBehaviour
     public static BaseTileHandler getClosestEnemy(Vector2Int coordinate, bool isAlly)
     {
         Vector2Int v = dijkstra(coordinate, isAlly);
-        Debug.Log(v.x + "," + v.y);
-        return tileMap[v.x + "," + v.y];
+        if (!v.Equals(Vector2Int.down))
+            return tileMap[v.x + "," + v.y];
+        else
+            return null;
     }
 
     static Vector2Int dijkstra(Vector2Int start, bool isAlly)
@@ -98,7 +111,7 @@ public class Battlefield : MonoBehaviour
                 }
             }
         }
-        return new Vector2Int(0,0);
+        return Vector2Int.down;
     }
 
     static List<Vector2Int> findNeighbors(Queue<Vector2Int> queue, int x, int y)

@@ -7,6 +7,7 @@ public class ShopButtonHandler : MonoBehaviour
 {
     public float AlphaThreshold = 0.1f;
     public Player player;
+    public Text cost;
 
     public BenchManager benchManager;
 
@@ -21,6 +22,7 @@ public class ShopButtonHandler : MonoBehaviour
     public void setUnit(Unit u)
     {
         unit = u;
+        cost.text = u.cost.ToString();
         this.gameObject.GetComponent<Image>().sprite = UnitSpritePool.getSprite(unit.unit_name);
     }
 
@@ -36,6 +38,7 @@ public class ShopButtonHandler : MonoBehaviour
     private void resetDefault()
     {
         this.unit = null;
+        cost.text = "";
         this.gameObject.GetComponent<Image>().sprite = UnitSpritePool.getDefaultShop();
     }
 }

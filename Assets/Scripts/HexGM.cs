@@ -9,7 +9,7 @@ public class HexGM : MonoBehaviour
     public Board ally, enemy;
     public RefreshButtonHandler rbh;
     public Player p;
-    public const float roundTimer = 5;
+    public const float roundTimer = 8;
 
     private bool isShowing = true;
     private static bool isBuyRound = true;
@@ -75,8 +75,8 @@ public class HexGM : MonoBehaviour
             endBattleRoundTasks();
         } else
         {
-            ally.initAllUnits();
-            enemy.initAllUnits();
+            ally.lockBoard();
+            Battlefield.initAllUnits();
             if (p.getActiveUnit() != null)
             {
                 p.activeUnitObject.GetComponent<Image>().color = Color.white;
@@ -102,5 +102,6 @@ public class HexGM : MonoBehaviour
         p.addInterest();
         rbh.rerollShop(0);
         p.gainExp(1);
+        ally.revertToLocked();
     }
 }

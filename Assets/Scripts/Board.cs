@@ -1,13 +1,21 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Board : MonoBehaviour
 {
+    List<BaseTileHandler> tiles = new List<BaseTileHandler>();
+    Unit[] lockedTiles;
     // Start is called before the first frame update
     void Start()
     {
+        foreach (Transform child in transform)
+        {
+            tiles.Add(child.GetComponent<BaseTileHandler>());
+        }
+        lockedTiles = new Unit[tiles.Count];
     }
 
     // Update is called once per frame
@@ -40,18 +48,24 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void initAllUnits()
+    public void lockBoard()
     {
-        foreach(Transform child in transform)
+        for (int i = 0; i < tiles.Count; i++)
         {
-            BoardTileHandler b = child.gameObject.GetComponent<BoardTileHandler>();
-            if (b != null)
+            lockedTiles[i] = tiles[i].getCurrentUnit();
+        }
+    }
+
+    public void revertToLocked()
+    {
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            if (lockedTiles[i] == null)
             {
-                Unit u = b.getCurrentUnit();
-                if (u != null)
-                {
-                    u.resetForCombat();
-                }
+                tiles[i].resetDefault();
+            } else
+            {
+                tiles[i].setUnit(lockedTiles[i]);
             }
         }
     }
