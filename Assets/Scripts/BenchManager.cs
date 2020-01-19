@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class BenchManager : MonoBehaviour
 {
-    static BenchButtonHandler[] bench = null;
+    BenchButtonHandler[] bench = null;
     public GameObject one, two, three, four, five, six, seven, eight, nine, ten;
 
     // Start is called before the first frame update

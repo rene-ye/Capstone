@@ -9,6 +9,7 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
     public Slider healthBar, manaBar;
     public Player player;
     public GameObject AllyBullet;
+    public Battlefield battlefield;
     private Unit unit = null;
 
     private Board ally;
@@ -65,7 +66,7 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
             if (unit != null && unit.readyToAttack())
             {
                 // figure out which tile to attack
-                List<BaseTileHandler> bthl = Battlefield.getClosestEnemy(coordinate, unit.isAlly);
+                List<BaseTileHandler> bthl = battlefield.getClosestEnemy(coordinate, unit.isAlly);
                 if (bthl != null)
                 {
                     BaseTileHandler bth = bthl[0];

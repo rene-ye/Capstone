@@ -7,11 +7,10 @@ public class Battlefield : MonoBehaviour
 {
     const int MAX_X = 12;
     const int MAX_Y = 3;
-    const int TOTAL_TILES = 46;
 
     // Start is called before the first frame update
     public GameObject ally, enemy;
-    private static Dictionary<string,BaseTileHandler> tileMap = new Dictionary<string, BaseTileHandler>();
+    private Dictionary<string,BaseTileHandler> tileMap = new Dictionary<string, BaseTileHandler>();
 
     void Start()
     {
@@ -26,7 +25,7 @@ public class Battlefield : MonoBehaviour
         }
     }
 
-    public static void initAllUnits()
+    public void initAllUnits()
     {
         foreach (BaseTileHandler b in tileMap.Values)
         {
@@ -38,32 +37,8 @@ public class Battlefield : MonoBehaviour
         }
     }
 
-    public static int[,] generateWeightedGraph()
-    {
-        int[,] graph = new int[MAX_X, MAX_Y];
-        for (int x = 0; x <= MAX_X; x++)
-        {
-            for (int y = 0; y <= MAX_Y; y++)
-            {
-                graph[x, y] = tileMap[x + ","+y].getNodeWeight();
-
-            }
-        }
-        return graph;
-    }
-    /***********************************************************************************************/
-    public static BaseTileHandler getRandomTile()
-    {
-        List<string> keyList = new List<string>(tileMap.Keys);
-        UnityEngine.Random rand = new UnityEngine.Random();
-        string randomKey = keyList[UnityEngine.Random.Range(0, keyList.Count)];
-        return tileMap[randomKey];
-    }
-    /***********************************************************************************************/
-
-
     // returns the shortest path to the closest enemy
-    public static List<BaseTileHandler> getClosestEnemy(Vector2Int coordinate, bool isAlly)
+    public List<BaseTileHandler> getClosestEnemy(Vector2Int coordinate, bool isAlly)
     {
         List<Vector2Int> v = dijkstra(coordinate, isAlly);
         if (v != null)
@@ -103,7 +78,7 @@ public class Battlefield : MonoBehaviour
         }
     }
 
-    static List<Vector2Int> dijkstra(Vector2Int start, bool isAlly)
+    List<Vector2Int> dijkstra(Vector2Int start, bool isAlly)
     {
         Node[,] graph = new Node[MAX_X + 1, MAX_Y + 1];
         for (int i = 0; i < MAX_X + 1;i++)

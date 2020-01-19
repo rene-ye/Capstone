@@ -95,18 +95,18 @@ public static class UnitFactory
         }
     }
 
+    static float[] one = new float[] { 100, 0, 0, 0, 0 };
+    static float[] two = new float[] { 70, 30, 0, 0, 0 };
+    static float[] three = new float[] { 60, 35, 5, 0, 0 };
+    static float[] four = new float[] { 50, 35, 15, 0, 0 };
+    static float[] five = new float[] { 40, 35, 23, 2, 0 };
+    static float[] six = new float[] { 33, 30, 30, 7, 0 };
+    static float[] seven = new float[] { 30, 30, 30, 10, 0 };
+    static float[] eight = new float[] { 24, 30, 30, 15, 1 };
+    static float[] nine = new float[] { 22, 30, 30, 20, 3 };
+    static float[] ten = new float[] { 19, 25, 25, 25, 6 };
     private static float[] getChances(int level)
     {
-        float[] one = new float[] { 100, 0, 0, 0, 0 };
-        float[] two = new float[] { 70, 30, 0, 0, 0 };
-        float[] three = new float[] { 60, 35, 5, 0, 0 };
-        float[] four = new float[] { 50, 35, 15, 0, 0 };
-        float[] five = new float[] { 40, 35, 23, 2, 0 };
-        float[] six = new float[] { 33, 30, 30, 7, 0 };
-        float[] seven = new float[] { 30, 30, 30, 10, 0 };
-        float[] eight = new float[] { 24, 30, 30, 15, 1 };
-        float[] nine = new float[] { 22, 30, 30, 20, 3 };
-        float[] ten = new float[] { 19, 25, 25, 25, 6 };
 
         switch (level)
         {
@@ -300,7 +300,7 @@ public class Ogre : Unit
         unit_asset_location = "Tiles/Ogre";
 
         range = 3;
-        cost = 3;
+        cost = 1;
 
         health = 550;
         attack = 85;

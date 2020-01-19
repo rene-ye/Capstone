@@ -7,9 +7,11 @@ using UnityEngine.UI;
 public class EnemyTileHandler : MonoBehaviour, BaseTileHandler
 {
     public Slider healthBar, manaBar;
+    public GameObject AllyBullet;
+    public Battlefield battlefield;
+
     private Unit unit = null;
     private Vector2Int coordinate;
-    public GameObject AllyBullet;
     private bool barsActive = false;
     private Image healthBarColor;
 
@@ -58,7 +60,7 @@ public class EnemyTileHandler : MonoBehaviour, BaseTileHandler
             if (unit != null && unit.readyToAttack())
             {
                 // figure out which tile to attack
-                List<BaseTileHandler> bthl = Battlefield.getClosestEnemy(coordinate, unit.isAlly);
+                List<BaseTileHandler> bthl = battlefield.getClosestEnemy(coordinate, unit.isAlly);
                 if (bthl != null)
                 {
                     BaseTileHandler bth = bthl[0];

@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
 {
     public Slider slider;
     public Text levelTextBox;
+    public Field field;
 
     int level, gold, exp;
     float[] tier1 = new float[] { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
@@ -21,7 +22,7 @@ public class Player : MonoBehaviour
     public Player()
     {
         level = 1;
-        gold = 5000;
+        gold = 30;
         exp = 0;
     }
 
@@ -144,5 +145,10 @@ public class Player : MonoBehaviour
         activeUnit = null;
         activeUnitObject.GetComponent<Image>().color = Color.white;
         activeUnitObject = null;
+    }
+
+    public void switchRounds()
+    {
+        field.switchRounds();
     }
 }
