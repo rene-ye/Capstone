@@ -6,16 +6,13 @@ using UnityEngine;
 public class Battlefield : MonoBehaviour
 {
     const int MAX_X = 12;
-    const int MAX_Y = 2;
+    const int MAX_Y = 3;
+    const int TOTAL_TILES = 46;
 
     // Start is called before the first frame update
     public GameObject ally, enemy;
-
-
-
     private static Dictionary<string,BaseTileHandler> tileMap = new Dictionary<string, BaseTileHandler>();
 
-    private int randomTest = 3;
     void Start()
     {
         foreach (Transform child in ally.transform)
@@ -26,13 +23,6 @@ public class Battlefield : MonoBehaviour
         foreach (Transform child in enemy.transform)
         {
             tileMap.Add(child.name, child.gameObject.GetComponent<EnemyTileHandler>());
-            if(randomTest > 0)
-            {
-                Axe a = new Axe();
-                a.isAlly = false;
-                child.gameObject.GetComponent<EnemyTileHandler>().setUnit(a);
-                randomTest--;
-            }
         }
     }
 
@@ -72,49 +62,109 @@ public class Battlefield : MonoBehaviour
     /***********************************************************************************************/
 
 
-
-    public static BaseTileHandler getClosestEnemy(Vector2Int coordinate, bool isAlly)
+    // returns the shortest path to the closest enemy
+    public static List<BaseTileHandler> getClosestEnemy(Vector2Int coordinate, bool isAlly)
     {
-        Vector2Int v = dijkstra(coordinate, isAlly);
-        if (!v.Equals(Vector2Int.down))
-            return tileMap[v.x + "," + v.y];
+        List<Vector2Int> v = dijkstra(coordinate, isAlly);
+        if (v != null)
+        {
+            List<BaseTileHandler> l = new List<BaseTileHandler>();
+            for (int i = 0; i < v.Count; i++)
+            {
+                l.Add(tileMap[v[i].x + "," + v[i].y]);
+            }
+            return l;
+        }
         else
             return null;
     }
 
-    static Vector2Int dijkstra(Vector2Int start, bool isAlly)
+    class Node
     {
-        Queue<Vector2Int> queue = new Queue<Vector2Int>();
-        HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
-        queue.Enqueue(start);
-        while (queue.Count > 0)
+        public Vector2Int vector;
+        public int cost;
+        public Node parent;
+
+        public Node(int w, Node p)
         {
-            Vector2Int tile = queue.Dequeue();
-            visited.Add(tile);
-            BaseTileHandler bTile = tileMap[tile.x + "," + tile.y];
-            // Found enemy
-            if (bTile.getCurrentUnit() != null && bTile.getCurrentUnit().isAlly != isAlly)
-            {
-                return tile;
-            }
-            // Didn't find enemy, get neighbors
-            List<Vector2Int> l = findNeighbors(queue, tile.x, tile.y);
-            for (int i = 0; i < l.Count; i++)
-            {
-                Vector2Int v = l[i];
-                if (visited.Contains(v))
-                {
-                    l.RemoveAt(i);
-                } else
-                {
-                    queue.Enqueue(v);
-                }
-            }
+            cost = w;
+            parent = p;
         }
-        return Vector2Int.down;
+
+        public Node(int w, Node p, Vector2Int v)
+        {
+            cost = w;
+            parent = p;
+            vector = v;
+        }
+
+        public void setVec(Vector2Int v) {
+            vector = v;
+        }
     }
 
-    static List<Vector2Int> findNeighbors(Queue<Vector2Int> queue, int x, int y)
+    static List<Vector2Int> dijkstra(Vector2Int start, bool isAlly)
+    {
+        Node[,] graph = new Node[MAX_X + 1, MAX_Y + 1];
+        for (int i = 0; i < MAX_X + 1;i++)
+        {
+            for (int j = 0; j < MAX_Y + 1; j++)
+            {
+                graph[i, j] = new Node(Unit.WEIGHT_MAX, null, new Vector2Int(i, j));
+            }
+        }
+        graph[start.x, start.y] = new Node(0, null, start);
+
+        List<Vector2Int> path = new List<Vector2Int>();
+
+        // Not actually a priority queue but we can solve that by sorting
+        List<Node> prioQueue = new List<Node>();
+        HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+        // init starting point
+        prioQueue.Add(graph[start.x,start.y]);
+
+        while (prioQueue.Count > 0)
+        {
+            Node current = prioQueue[0];
+            prioQueue.RemoveAt(0);
+            List<Vector2Int> neighborVectors = findNeighbors(current.vector.x, current.vector.y);
+            foreach (Vector2Int v in neighborVectors)
+            {
+                BaseTileHandler b = tileMap[v.x + "," + v.y];
+                if (b.getCurrentUnit() != null && b.getCurrentUnit().isAlly != isAlly)
+                {
+                    // found enemy
+                    path.Add(b.getCoordinate());
+                    path.Add(current.vector);
+                    while (current.parent != null)
+                    {
+                        path.Add(current.parent.vector);
+                        current = current.parent;
+                    }
+                    return path;
+                } else
+                {
+                    // check if the weight is smaller than the recorded weight
+                    int weight = current.cost + b.getNodeWeight();
+                    if (graph[v.x,v.y].cost > weight)
+                    {
+                        graph[v.x, v.y].cost = weight;
+                        graph[v.x, v.y].parent = current;
+                        if (!prioQueue.Contains(graph[v.x,v.y]))
+                        {
+                            prioQueue.Add(graph[v.x, v.y]);
+                        }
+                    }
+                }
+                // sort the queue by weight after adding all neighbors
+                prioQueue.Sort((one, two) => one.cost.CompareTo(two.cost));
+                visited.Add(current.vector);
+            }
+        }
+        return null;
+    }
+
+    static List<Vector2Int> findNeighbors(int x, int y)
     {
         List<Vector2Int> l = new List<Vector2Int>();
         if (y > 0)
@@ -123,37 +173,59 @@ public class Battlefield : MonoBehaviour
         if (x % 2 == 0)
         {
             // top and bottom
-            if (y < MAX_Y + 1)
+            if (y < MAX_Y)
                 l.Add(new Vector2Int(x, y + 1));
             // right side
-            if (x < MAX_X && y <= MAX_Y)
+            if (x < MAX_X && y < MAX_Y)
                 l.Add(new Vector2Int(x + 1, y));
             if (x < MAX_X && y > 0)
                 l.Add(new Vector2Int(x + 1, y - 1));
             // left side
-            if (x > 0 && y <= MAX_Y)
+            if (x > 0 && y < MAX_Y)
                 l.Add(new Vector2Int(x - 1, y));
             if (x > 0 && y > 0)
                 l.Add(new Vector2Int(x - 1, y - 1));
         } else
         {
             // top and bottom
-            if (y < MAX_Y)
+            if (y < MAX_Y - 1)
+            {
                 l.Add(new Vector2Int(x, y + 1));
+            }
             // right side
             if (x < MAX_X)
+            {
                 l.Add(new Vector2Int(x + 1, y));
-            if (x < MAX_X && y < MAX_Y)
                 l.Add(new Vector2Int(x + 1, y + 1));
+            }
             // left side
             if (x > 0)
+            {
                 l.Add(new Vector2Int(x - 1, y));
-            if (x > 0 && y < MAX_Y)
                 l.Add(new Vector2Int(x - 1, y + 1));
+            }
 
         }
-        // Sort by node weight
-        l.Sort((a, b) => tileMap[a.x + "," + a.y].getNodeWeight().CompareTo(tileMap[b.x + "," + b.y].getNodeWeight()));
         return l;
+    }
+
+    /*
+     * Need a custom manhattan distance finder due to hex coordinate system
+     */
+    public static int getDistance(Vector2Int start, Vector2Int end)
+    {
+        if (start.x == end.x)
+            return Mathf.Abs(end.y - start.y);
+        else if (start.y == end.y)
+            return Mathf.Abs(end.x - start.x);
+        else
+        {
+            int dx = Mathf.Abs(end.x - start.x);
+            int dy = Mathf.Abs(end.y - start.y);
+            if (start.y < end.y)
+                return dx + dy - (int)Mathf.Ceil(dx / 2.0f);
+            else
+                return dx + dy - (int)Mathf.Floor(dx / 2.0f);
+        }
     }
 }

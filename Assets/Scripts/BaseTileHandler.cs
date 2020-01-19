@@ -12,6 +12,6 @@ public interface BaseTileHandler
     int getNodeWeight();
     void takeDamage(int attack);
     void resetDefault();
-    void setUnit(Unit u);
+    bool setUnit(Unit u);
 }
 

@@ -6,6 +6,7 @@ public abstract class Unit
 {
     public const int WEIGHT_DEFAULT = 5;
     public const int WEIGHT_MAX = 99;
+    public const int WEIGHT_ALLY = 9;
 
     public int health, attack, mana, range, cost;
     public int tier = 1;
@@ -267,7 +268,7 @@ public class Axe : Unit
         unit_name = "Axe";
         unit_asset_location = "Tiles/Axe";
 
-        range = 1;
+        range = 3;
         cost = 1;
 
         health = 700;
@@ -283,7 +284,7 @@ public class Bounty : Unit
         unit_name = "Bounty";
         unit_asset_location = "Tiles/Bounty";
 
-        range = 1;
+        range = 3;
         cost = 1;
 
         health = 550;
@@ -298,8 +299,8 @@ public class Ogre : Unit
         unit_name = "Ogre";
         unit_asset_location = "Tiles/Ogre";
 
-        range = 1;
-        cost = 1;
+        range = 3;
+        cost = 3;
 
         health = 550;
         attack = 85;
@@ -313,7 +314,7 @@ public class Clock : Unit
         unit_name = "Clock";
         unit_asset_location = "Tiles/Clock";
 
-        range = 1;
+        range = 3;
         cost = 1;
 
         health = 550;

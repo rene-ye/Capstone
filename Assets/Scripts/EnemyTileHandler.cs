@@ -11,19 +11,24 @@ public class EnemyTileHandler : MonoBehaviour, BaseTileHandler
     private Vector2Int coordinate;
     public GameObject AllyBullet;
     private bool barsActive = false;
+    private Image healthBarColor;
 
     // Start is called before the first frame update
     void Start()
     {
         activateBars(false);
+        healthBarColor = healthBar.transform.Find("Fill Area").GetComponentInChildren<Image>();
 
         string[] s = gameObject.name.Split(',');
         int x = int.Parse(s[0]);
         int y = int.Parse(s[1]);
         coordinate = new Vector2Int(x, y);
     }
+    private void setHealthColor(bool isAlly)
+    {
+        healthBarColor.color = isAlly ? Color.green : Color.red;
+    }
 
-    // Update is called once per frame
     void Update()
     {
         if (!HexGM.isShoppingRound())
@@ -39,8 +44,10 @@ public class EnemyTileHandler : MonoBehaviour, BaseTileHandler
             if (barsActive && unit == null)
             {
                 activateBars(false);
-            } else if (barsActive && unit != null)
+            }
+            else if (barsActive && unit != null)
             {
+                setHealthColor(unit.isAlly);
                 healthBar.value = (float)unit.currentHealth / unit.health;
                 manaBar.value = (float)unit.currentMana / unit.mana;
             }
@@ -50,22 +57,55 @@ public class EnemyTileHandler : MonoBehaviour, BaseTileHandler
              */
             if (unit != null && unit.readyToAttack())
             {
-                //figure out which tile to attack
-                BaseTileHandler bth = Battlefield.getClosestEnemy(coordinate, unit.isAlly);
-                if (bth != null)
+                // figure out which tile to attack
+                List<BaseTileHandler> bthl = Battlefield.getClosestEnemy(coordinate, unit.isAlly);
+                if (bthl != null)
                 {
-                    Vector3 target = bth.getGameObject().transform.position;
-
-                    //Create the bullet, it'll be responsible for it's own destruction
-                    var newBullet = Instantiate(AllyBullet, this.transform.localPosition, Quaternion.identity);
-                    newBullet.transform.SetParent(this.transform.parent.parent);
-                    if (!unit.isAlly)
+                    BaseTileHandler bth = bthl[0];
+                    if (!(Battlefield.getDistance(this.coordinate, bth.getCoordinate()) <= unit.range))
                     {
-                        newBullet.GetComponent<Image>().color = Color.red;
+                        // it's out of range, move instead, we already got the shortest path so try to move along the path
+                        // the first unit is the target, so we want to start with the furthest possible range from the target
+                        for (int i = unit.range; i > 0; i--)
+                        {
+                            if (bthl[i].getCurrentUnit() == null)
+                            {
+                                if (bthl[i].setUnit(this.unit))
+                                {
+                                    this.resetDefault();
+                                    break;
+                                }
+                            }
+                        }
+                        // ok no tiles are available within range, move to a tile outside range if possible
+                        if (this.unit != null)
+                        {
+                            for (int i = unit.range; i < bthl.Count; i++)
+                            {
+                                if (bthl[i].getCurrentUnit() == null)
+                                {
+                                    if (bthl[i].setUnit(this.unit))
+                                    {
+                                        this.resetDefault();
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
-                    BulletHandler b = newBullet.gameObject.GetComponent<BulletHandler>();
-                    b.setDestination(this.transform.position, bth, unit);
-                    newBullet.SetActive(true);
+                    else
+                    {
+                        // Create the bullet, it'll be responsible for it's own destruction
+                        var newBullet = Instantiate(AllyBullet, this.transform.localPosition, Quaternion.identity);
+                        newBullet.transform.SetParent(this.transform.parent.parent);
+                        if (!unit.isAlly)
+                        {
+                            newBullet.GetComponent<Image>().color = Color.red;
+                        }
+                        BulletHandler b = newBullet.gameObject.GetComponent<BulletHandler>();
+                        b.setDestination(this.transform.position, bth, unit);
+                        newBullet.SetActive(true);
+                    }
                 }
             }
         }
@@ -82,11 +122,16 @@ public class EnemyTileHandler : MonoBehaviour, BaseTileHandler
         manaBar.gameObject.SetActive(b);
     }
 
-    public void setUnit(Unit u)
+    public bool setUnit(Unit u)
     {
-        unit = u;
-        this.gameObject.GetComponent<Image>().sprite = UnitSpritePool.getSprite(unit.unit_name);
-        this.gameObject.GetComponent<Image>().color = unit.getTierColor();
+        if (this.unit == null)
+        {
+            unit = u;
+            this.gameObject.GetComponent<Image>().sprite = UnitSpritePool.getSprite(unit.unit_name);
+            this.gameObject.GetComponent<Image>().color = unit.getTierColor();
+            return true;
+        }
+        return false;
     }
 
     public void resetDefault()
@@ -121,7 +166,7 @@ public class EnemyTileHandler : MonoBehaviour, BaseTileHandler
         else
         {
             if (unit.isAlly)
-                return Unit.WEIGHT_MAX;
+                return Unit.WEIGHT_ALLY;
             return unit.weight;
         }
     }
