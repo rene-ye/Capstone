@@ -10,6 +10,7 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
     public Player player;
     public GameObject AllyBullet;
     public Battlefield battlefield;
+    public SupplyManager supply;
     private Unit unit = null;
 
     private Board ally;
@@ -39,7 +40,7 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
     // Update is called once per frame
     void Update()
     {
-        if (!HexGM.isShoppingRound())
+        if (HexGM.isBattleRound())
         {
             /*
              * Check whether to display health bars
@@ -80,23 +81,21 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
                             {
                                 if (bthl[i].setUnit(this.unit))
                                 {
+                                    Debug.Log("Moving Inside range");
                                     this.resetDefault();
-                                    break;
+                                    return;
                                 }
                             }
                         }
-                        // ok no tiles are available within range, move to a tile outside range if possible
-                        if (this.unit != null)
+                        for (int i = unit.range; i < bthl.Count; i++)
                         {
-                            for (int i = unit.range; i < bthl.Count; i++)
+                            if (bthl[i].getCurrentUnit() == null)
                             {
-                                if (bthl[i].getCurrentUnit() == null)
+                                if (bthl[i].setUnit(this.unit))
                                 {
-                                    if (bthl[i].setUnit(this.unit))
-                                    {
-                                        this.resetDefault();
-                                        break;
-                                    }
+                                    Debug.Log("Moving outside range");
+                                    this.resetDefault();
+                                    return;
                                 }
                             }
                         }
@@ -104,7 +103,7 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
                     else
                     {
                         // Create the bullet, it'll be responsible for it's own destruction
-                        var newBullet = Instantiate(AllyBullet, this.transform.localPosition, Quaternion.identity);
+                        var newBullet = Instantiate(AllyBullet, this.transform.position, Quaternion.identity);
                         newBullet.transform.SetParent(this.transform.parent.parent);
                         if (!unit.isAlly)
                         {
@@ -112,7 +111,6 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
                         }
                         BulletHandler b = newBullet.gameObject.GetComponent<BulletHandler>();
                         b.setDestination(this.transform.position, bth, unit);
-                        newBullet.SetActive(true);
                     }
                 }
             }
@@ -152,6 +150,7 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
                 setUnit(player.getActiveUnit());
                 player.clearActiveUnit();
                 player.rgo();
+                supply.setCurrentSupply(ally.getTotalActiveUnits());
             }
         }
     }
@@ -191,14 +190,14 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
         return coordinate;
     }
 
-    public int getNodeWeight()
+    public int getNodeWeight(bool isAlly)
     {
         if (unit == null)
         {
             return Unit.WEIGHT_DEFAULT;
         } else
         {
-            if (unit.isAlly)
+            if (isAlly == unit.isAlly)
                 return Unit.WEIGHT_ALLY;
             return unit.weight;
         }

@@ -9,7 +9,7 @@ public interface BaseTileHandler
     GameObject getGameObject();
     Vector2Int getCoordinate();
     Unit getCurrentUnit();
-    int getNodeWeight();
+    int getNodeWeight(bool isAlly);
     void takeDamage(int attack);
     void resetDefault();
     bool setUnit(Unit u);

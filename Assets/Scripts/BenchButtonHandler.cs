@@ -8,6 +8,8 @@ public class BenchButtonHandler : MonoBehaviour
 {
     public float AlphaThreshold = 0.1f;
     public Player player;
+    public Board ally;
+    public SupplyManager supply;
 
     public GameObject bench, trash;
 
@@ -64,5 +66,6 @@ public class BenchButtonHandler : MonoBehaviour
             player.clearActiveUnit();
             player.rgo();
         }
+        supply.setCurrentSupply(ally.getTotalActiveUnits());
     }
 }

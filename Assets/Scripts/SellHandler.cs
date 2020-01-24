@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class SellHandler : MonoBehaviour
 {
     public Player player;
+    public Board ally;
+    public SupplyManager supply;
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +34,7 @@ public class SellHandler : MonoBehaviour
             player.gain(u.cost);
             player.clearActiveUnit();
             player.rgo();
+            supply.setCurrentSupply(ally.getTotalActiveUnits());
         }
     }
 }

@@ -24,7 +24,7 @@ public class Field : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        timer.text = Mathf.FloorToInt(HexGM.getRoundTimer()).ToString();
+        timer.text = Mathf.FloorToInt((float)HexGM.getRoundTimer()).ToString();
     }
 
     public void setState()
@@ -50,40 +50,82 @@ public class Field : MonoBehaviour
         }
     }
 
-    public void switchRounds()
+    public void setShopping()
     {
-        if (HexGM.isShoppingRound())
+        roundText.text = "Shopping";
+        if (isShowing)
         {
-            roundText.text = "Shopping";
-            if (isShowing)
-            {
-                enemy.transform.localScale = Vector3.zero;
-            }
-            endBattleRoundTasks();
+            enemy.transform.localScale = Vector3.zero;
         }
-        else
-        {
-            ally.lockBoard();
-            battlefield.initAllUnits();
-            if (p.getActiveUnit() != null)
-            {
-                p.activeUnitObject.GetComponent<Image>().color = Color.white;
-                p.clearActiveUnit();
-            }
-            roundText.text = "Battle";
-            if (isShowing)
-            {
-                enemy.transform.localScale = Vector3.one;
-            }
+        endBattleRoundTasks();
+    }
 
+    public void setIntermission()
+    {
+        roundText.text = "Getting Ready";
+    }
+
+    public void setBattle()
+    {
+        battlefield.initAllUnits();
+        if (p.getActiveUnit() != null)
+        {
+            Image img = p.activeUnitObject.GetComponent<Image>();
+            Color c = p.getActiveUnit().getTierColor();
+            p.clearActiveUnit();
+            img.color = c;
+        }
+        roundText.text = "Battle";
+        if (isShowing)
+        {
+            enemy.transform.localScale = Vector3.one;
         }
     }
 
     private void endBattleRoundTasks()
     {
+        p.takeDamage(calculateDamage());
         p.addInterest();
         rbh.rerollShop(0);
         p.gainExp(1);
         ally.revertToLocked();
+        enemy.clear();
+    }
+
+    private int calculateDamage()
+    {
+        int damage = 0;
+        foreach (BaseTileHandler b in Battlefield.tileMap.Values)
+        {
+            Unit u = b.getCurrentUnit();
+            if (u != null && !u.isAlly)
+            {
+                damage += u.cost + (u.cost * (u.tier - 1));
+            }
+        }
+        return damage;
+    }
+
+    public List<UnitInfo> lockAllyBoard()
+    {
+        ally.lockBoard();
+        return ally.unitInfo;
+    }
+
+    public void setEnemies(UnitInfo[] u)
+    {
+        foreach (UnitInfo unitInfo in u)
+        {
+            Unit unit = UnitFactory.createUnit(unitInfo.unit_name);
+            for(int i = unitInfo.unit_tier; i > 1; i--)
+            {
+                unit.rankUp();
+            }
+            unit.isAlly = false;
+
+            int locationX = 12 - unitInfo.locationX;
+            int locationY = (locationX % 2 == 0) ? (3 - unitInfo.locationY) : (2 - unitInfo.locationY);
+            Battlefield.tileMap[locationX + "," + locationY].setUnit(unit);
+        }
     }
 }

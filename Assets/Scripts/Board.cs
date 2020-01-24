@@ -7,7 +7,10 @@ using UnityEngine.UI;
 public class Board : MonoBehaviour
 {
     List<BaseTileHandler> tiles = new List<BaseTileHandler>();
-    Unit[] lockedTiles;
+    public Player player;
+    public Unit[] lockedTiles;
+    public SupplyManager supply;
+    public List<UnitInfo> unitInfo = new List<UnitInfo>();
     // Start is called before the first frame update
     void Start()
     {
@@ -50,8 +53,30 @@ public class Board : MonoBehaviour
 
     public void lockBoard()
     {
+        int unitOverflow = supply.getOverflow();
+        if (unitOverflow > 0)
+        {
+            foreach (BaseTileHandler b in tiles)
+            {
+                if (b.getCurrentUnit() != null)
+                {
+                    player.gain(b.getCurrentUnit().cost);
+                    b.resetDefault();
+                    unitOverflow--;
+                    supply.alterCurrentSupply(-1);
+                }
+                if (unitOverflow == 0)
+                    break;
+            }
+        }
+        unitInfo.Clear();
         for (int i = 0; i < tiles.Count; i++)
         {
+            Unit u = tiles[i].getCurrentUnit();
+            if (u != null)
+            {
+                unitInfo.Add(new UnitInfo(u.unit_name, u.tier, tiles[i].getCoordinate().x, tiles[i].getCoordinate().y));
+            }
             lockedTiles[i] = tiles[i].getCurrentUnit();
         }
     }
@@ -68,5 +93,45 @@ public class Board : MonoBehaviour
                 tiles[i].setUnit(lockedTiles[i]);
             }
         }
+    }
+
+    internal void clear()
+    {
+        foreach(BaseTileHandler b in tiles)
+        {
+            b.resetDefault();
+        }
+    }
+
+    public void setBoard(Unit[] u)
+    {
+        if (u == null || u.Length != tiles.Count)
+            return;
+
+        for (int i = tiles.Count - 1; i >= 0; i--)
+        {
+            if (u[i] == null)
+            {
+                tiles[i].resetDefault();
+            } else
+            {
+                Unit temp = u[i];
+                temp.isAlly = false;
+                tiles[i].setUnit(temp);
+            }
+        }
+    }
+
+    public int getTotalActiveUnits()
+    {
+        int i = 0;
+        foreach (BaseTileHandler b in tiles)
+        {
+            if (b.getCurrentUnit() != null)
+            {
+                i++;
+            }
+        }
+        return i;
     }
 }

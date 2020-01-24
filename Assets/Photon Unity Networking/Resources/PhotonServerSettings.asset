@@ -39,4 +39,9 @@ MonoBehaviour:
   - RequestForPickupTimes
   - RPC_LoadGameOthers
   - RPC_LoadedGameScene
+  - RPC_AddPlayers
+  - RPC_UpdatePlayers
+  - RPC_RegisterPlayer
+  - UpdateUnits
+  - RPC_UpdateUnits
   DisableAutoOpenWizard: 1

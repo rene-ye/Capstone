@@ -10,7 +10,7 @@ public class Battlefield : MonoBehaviour
 
     // Start is called before the first frame update
     public GameObject ally, enemy;
-    private Dictionary<string,BaseTileHandler> tileMap = new Dictionary<string, BaseTileHandler>();
+    public static Dictionary<string,BaseTileHandler> tileMap = new Dictionary<string, BaseTileHandler>();
 
     void Start()
     {
@@ -120,7 +120,7 @@ public class Battlefield : MonoBehaviour
                 } else
                 {
                     // check if the weight is smaller than the recorded weight
-                    int weight = current.cost + b.getNodeWeight();
+                    int weight = current.cost + b.getNodeWeight(isAlly);
                     if (graph[v.x,v.y].cost > weight)
                     {
                         graph[v.x, v.y].cost = weight;
@@ -198,9 +198,9 @@ public class Battlefield : MonoBehaviour
             int dx = Mathf.Abs(end.x - start.x);
             int dy = Mathf.Abs(end.y - start.y);
             if (start.y < end.y)
-                return dx + dy - (int)Mathf.Ceil(dx / 2.0f);
+                return dx + dy - Mathf.CeilToInt(dx / 2.0f);
             else
-                return dx + dy - (int)Mathf.Floor(dx / 2.0f);
+                return dx + dy -  Mathf.FloorToInt(dx / 2.0f);
         }
     }
 }

@@ -1,15 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    public Slider slider;
-    public Text levelTextBox;
+    public Slider slider, healthSlider;
+    public Text levelTextBox, healthTextBox;
     public Field field;
+    public Text goldText;
+    public SupplyManager supply;
 
-    int level, gold, exp;
+    int level, gold, exp, health = 100;
     float[] tier1 = new float[] { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
     float[] tier2 = new float[] { 20, 20, 20, 20, 20 };
     float[] tier3 = new float[] { 25, 25, 25, 25 };
@@ -26,16 +29,9 @@ public class Player : MonoBehaviour
         exp = 0;
     }
 
-    private Text goldButton = null;
-
-    public void Start()
-    {
-        goldButton = GameObject.Find("Gold").GetComponentInChildren<Text>();
-    }
-
     public void Update()
     {
-        goldButton.text = gold.ToString();
+        goldText.text = gold.ToString();
     }
 
     public int getLevel() { return level; }
@@ -91,10 +87,33 @@ public class Player : MonoBehaviour
         while(this.exp >= required)
         {
             this.level++;
+            supply.increaseMaxSupply();
             levelTextBox.text = this.level.ToString();
             this.exp -= required;
             required = expRequired[level - 1];
         }
+    }
+
+    internal void takeDamage(int v)
+    {
+        health -= v;
+        if (health <= 0)
+        {
+            if (PhotonNetwork.isMasterClient)
+            {
+                foreach (PhotonPlayer p in PhotonNetwork.playerList)
+                {
+                    if (!p.IsMasterClient)
+                    {
+                        PhotonNetwork.SetMasterClient(p);
+                    }
+                }
+            }
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.LoadLevel(0);
+        }
+        healthSlider.value = health;
+        healthTextBox.text = health.ToString();
     }
 
     public void addInterest()
@@ -147,8 +166,32 @@ public class Player : MonoBehaviour
         activeUnitObject = null;
     }
 
-    public void switchRounds()
+    public UnitInfo[] currentUnits;
+    public void lockBoard()
     {
-        field.switchRounds();
+        currentUnits = field.lockAllyBoard().ToArray();
+    }
+
+    public void setEnemyBoard(UnitInfo[] u)
+    {
+        field.setEnemies(u);
+    }
+
+    public void switchRounds(int roundID)
+    {
+        switch (roundID)
+        {
+            case 0:
+                field.setShopping();
+                break;
+            case 1:
+                field.setIntermission();
+                break;
+            case 2:
+                field.setBattle();
+                break;
+            default:
+                break;
+        }
     }
 }

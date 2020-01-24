@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public abstract class Unit
 {
     public const int WEIGHT_DEFAULT = 5;
     public const int WEIGHT_MAX = 99;
-    public const int WEIGHT_ALLY = 9;
+    public const int WEIGHT_ALLY = 50;
 
     public int health, attack, mana, range, cost;
     public int tier = 1;
@@ -61,6 +62,28 @@ public abstract class Unit
             return true;
         }
         return false;
+    }
+}
+
+
+[Serializable]
+public class UnitInfo
+{
+    [SerializeField]
+    public string unit_name;
+    [SerializeField]
+    public int unit_tier;
+    [SerializeField]
+    public int locationX;
+    [SerializeField]
+    public int locationY;
+
+    public UnitInfo(string name, int tier, int x, int y)
+    {
+        unit_name = name;
+        unit_tier = tier;
+        locationX = x;
+        locationY = y;
     }
 }
 
@@ -130,6 +153,63 @@ public static class UnitFactory
                 return nine;
             case 10:
                 return ten;
+            default:
+                return null;
+        }
+    }
+
+    public static Unit createUnit(string name)
+    {
+        switch (name)
+        {
+            case "Axe":
+                return new Axe();
+            case "Bounty":
+                return new Bounty();
+            case "Ogre":
+                return new Ogre();
+            case "Clock":
+                return new Clock();
+            case "Walrus":
+                return new Walrus();
+            case "Inventor":
+                return new Inventor();
+            case "Hunter":
+                return new Hunter();
+            case "Exorcist":
+                return new Exorcist();
+            case "Rider":
+                return new Rider();
+            case "Enchantress":
+                return new Enchantress();
+            case "Maiden":
+                return new Maiden();
+            case "Blademaster":
+                return new Blademaster();
+            case "Queen":
+                return new Queen();
+            case "Elemental":
+                return new Elemental();
+            case "Prophet":
+                return new Prophet();
+            case "Fiend":
+                return new Fiend();
+            case "Sniper":
+                return new Sniper();
+            case "Gandalf":
+                return new Gandalf();
+            case "Wolverine":
+                return new Wolverine();
+            case "Admiral":
+                return new Admiral();
+            case "Troll":
+                return new Troll();
+            case "Medusa":
+                return new Medusa();
+            case "Zeus":
+                return new Zeus();
+            case "Dematerializer":
+                return new Dematerializer();
             default:
                 return null;
         }
@@ -233,7 +313,7 @@ public static class RandomUtils
     // Returns the index of the roll
     public static int roll(float[] d)
     {
-        float rollResult = Random.Range(0.0f, 100.0f);
+        float rollResult = UnityEngine.Random.Range(0.0f, 100.0f);
         float cumulative = 0.0f;
         for (int i = 0; i < d.Length; i++)
         {
