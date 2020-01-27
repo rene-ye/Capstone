@@ -107,6 +107,7 @@ public static class UnitFactory
         int unitTierToRoll = RandomUtils.roll(unitTierRollChances) + 1;
         float[] playerSpecificUnitRates = p.getRatesForUnitTier(unitTierToRoll);
         int unitIndex = RandomUtils.roll(playerSpecificUnitRates);
+        p.updateRatesForUnitTier(unitTierToRoll, unitIndex);
         return createUnit(unitTierToRoll, unitIndex);
     }
 

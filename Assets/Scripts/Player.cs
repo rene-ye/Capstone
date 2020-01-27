@@ -14,11 +14,14 @@ public class Player : MonoBehaviour
     public GameOver gameOverScreen;
 
     int level, gold, exp, health = 100;
-    float[] tier1 = new float[] { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
-    float[] tier2 = new float[] { 20, 20, 20, 20, 20 };
-    float[] tier3 = new float[] { 25, 25, 25, 25 };
-    float[] tier4 = new float[] { 100 / 3, 100 / 3, 100 / 3 };
-    float[] tier5 = new float[] { 50, 50 };
+    float[][] tiers = new float[][]
+    {
+        new float[] { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 },
+        new float[] { 20, 20, 20, 20, 20 },
+        new float[] { 25, 25, 25, 25 },
+        new float[] { 100 / 3, 100 / 3, 100 / 3 },
+        new float[] { 50, 50 }
+    };
 
     static int[] expRequired = new int[] { 1, 2, 4, 8, 12, 16, 20, 24, 32, 40 };
     public const int MAX_LEVEL = 10;
@@ -39,21 +42,19 @@ public class Player : MonoBehaviour
 
     public float[] getRatesForUnitTier(int unitTier)
     {
-        switch (unitTier)
+        return tiers[unitTier - 1];
+    }
+
+    public void updateRatesForUnitTier(int unitTier, int unitIndex)
+    {
+        for (int i = 0; i < tiers[unitTier - 1].Length; i++)
         {
-            case 1:
-                return tier1;
-            case 2:
-                return tier2;
-            case 3:
-                return tier3;
-            case 4:
-                return tier4;
-            case 5:
-                return tier5;
-            default:
-                return null;
+            if (i != unitIndex)
+                tiers[unitTier - 1][i] += (1 / tiers[unitTier - 1].Length) / (tiers[unitTier - 1].Length - 1);
+            else
+                tiers[unitTier - 1][i] -= (1 / tiers[unitTier - 1].Length);
         }
+        return;
     }
 
     public bool canAfford(int i)
