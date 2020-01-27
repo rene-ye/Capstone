@@ -77,21 +77,6 @@ public class Board : MonoBehaviour
             {
                 unitInfo.Add(new UnitInfo(u.unit_name, u.tier, tiles[i].getCoordinate().x, tiles[i].getCoordinate().y));
             }
-            lockedTiles[i] = tiles[i].getCurrentUnit();
-        }
-    }
-
-    public void revertToLocked()
-    {
-        for (int i = 0; i < tiles.Count; i++)
-        {
-            if (lockedTiles[i] == null)
-            {
-                tiles[i].resetDefault();
-            } else
-            {
-                tiles[i].setUnit(lockedTiles[i]);
-            }
         }
     }
 

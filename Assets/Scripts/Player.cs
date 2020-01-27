@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public Field field;
     public Text goldText;
     public SupplyManager supply;
+    public GameOver gameOverScreen;
 
     int level, gold, exp, health = 100;
     float[] tier1 = new float[] { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
@@ -99,6 +100,7 @@ public class Player : MonoBehaviour
         health -= v;
         if (health <= 0)
         {
+            gameOverScreen.gameObject.SetActive(true);
             if (PhotonNetwork.isMasterClient)
             {
                 foreach (PhotonPlayer p in PhotonNetwork.playerList)
@@ -110,7 +112,7 @@ public class Player : MonoBehaviour
                 }
             }
             PhotonNetwork.LeaveRoom();
-            PhotonNetwork.LoadLevel(0);
+            GameObject.Find("GameMaster").GetComponent<HexGM>().startTimer = false;
         }
         healthSlider.value = health;
         healthTextBox.text = health.ToString();

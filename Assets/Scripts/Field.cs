@@ -52,16 +52,22 @@ public class Field : MonoBehaviour
 
     public void setShopping()
     {
-        roundText.text = "Shopping";
         if (isShowing)
         {
             enemy.transform.localScale = Vector3.zero;
         }
         endBattleRoundTasks();
+        roundText.text = "Shopping";
     }
 
     public void setIntermission()
     {
+        if (PhotonNetwork.playerList.Length <= 1)
+        {
+            p.gameOverScreen.setWinner();
+            p.gameOverScreen.gameObject.SetActive(true);
+            GameObject.Find("GameMaster").GetComponent<HexGM>().startTimer = false;
+        }
         roundText.text = "Getting Ready";
     }
 
@@ -88,14 +94,16 @@ public class Field : MonoBehaviour
         p.addInterest();
         rbh.rerollShop(0);
         p.gainExp(1);
-        ally.revertToLocked();
+
         enemy.clear();
+        ally.clear();
+        setAllies();
     }
 
     private int calculateDamage()
     {
         int damage = 0;
-        foreach (BaseTileHandler b in Battlefield.tileMap.Values)
+        foreach (BaseTileHandler b in battlefield.tileMap.Values)
         {
             Unit u = b.getCurrentUnit();
             if (u != null && !u.isAlly)
@@ -112,6 +120,23 @@ public class Field : MonoBehaviour
         return ally.unitInfo;
     }
 
+    public void setAllies()
+    {
+        foreach (UnitInfo unitInfo in ally.unitInfo)
+        {
+            Unit unit = UnitFactory.createUnit(unitInfo.unit_name);
+            for (int i = unitInfo.unit_tier; i > 1; i--)
+            {
+                unit.rankUp();
+            }
+            unit.isAlly = true;
+
+            int locationX = unitInfo.locationX;
+            int locationY = unitInfo.locationY;
+            battlefield.tileMap[locationX + "," + locationY].setUnit(unit);
+        }
+    }
+
     public void setEnemies(UnitInfo[] u)
     {
         foreach (UnitInfo unitInfo in u)
@@ -125,7 +150,7 @@ public class Field : MonoBehaviour
 
             int locationX = 12 - unitInfo.locationX;
             int locationY = (locationX % 2 == 0) ? (3 - unitInfo.locationY) : (2 - unitInfo.locationY);
-            Battlefield.tileMap[locationX + "," + locationY].setUnit(unit);
+            battlefield.tileMap[locationX + "," + locationY].setUnit(unit);
         }
     }
 }

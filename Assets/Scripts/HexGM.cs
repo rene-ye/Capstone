@@ -7,43 +7,47 @@ using System.IO;
 
 public class HexGM : Photon.MonoBehaviour
 {
-    public const float ROUND_TIME = 15;
-    public const float INTERMISSION_TIME = 5;
+    public const double ROUND_TIME = 15;
+    public const double INTERMISSION_TIME = 5;
     public const string TIMER_KEY = "RoundTimeBegin";
     public const string UNITS_KEY = "FieldUnits";
     public Player hexPlayer;
 
+    public bool startTimer = false;
+    static double currentRoundTime;
+    static double timerIncrementValue;
+    double startTime;
 
-    private static PhotonView pView;
-    private static int round = 0; // 0 for buy, 1 for intermission, 2 for battle
-    private static double roundTimeLeft = 0;
+    private static int round; // 0 for buy, 1 for intermission, 2 for battle
     private string lastPlayerFought = "";
-    private double startTime = 0;
 
     private void Awake()
     {
-        pView = GetComponent<PhotonView>();
-    }
-
-    private void Start()
-    {
+        currentRoundTime = ROUND_TIME;
+        timerIncrementValue = 0;
         if (PhotonNetwork.player.IsMasterClient)
         {
             Hashtable hash = new Hashtable();
             startTime = PhotonNetwork.time;
             hash.Add(TIMER_KEY, startTime);
             PhotonNetwork.room.SetCustomProperties(hash);
-            roundTimeLeft = ROUND_TIME - ((PhotonNetwork.time - startTime) / 1000);
-        } else
-        {
-            roundTimeLeft = ROUND_TIME;
         }
+    }
+
+    private void Start()
+    {
+        round = 0;
+        startTime = (double)PhotonNetwork.room.CustomProperties[TIMER_KEY];
+        startTimer = true;
     }
 
     void Update()
     {
-        roundTimeLeft -= Time.deltaTime;
-        if (roundTimeLeft <= 0)
+        if (!startTimer)
+            return;
+
+        timerIncrementValue = PhotonNetwork.time - startTime;
+        if (timerIncrementValue > currentRoundTime)
         {
             switch (round)
             {
@@ -51,19 +55,20 @@ public class HexGM : Photon.MonoBehaviour
                 case 0:
                     UpdateUnits();
                     getNextOpponentName();
-                    syncTimer();
+                    UpdateTimer();
                     round++;
                     break;
                 //Intermission
                 case 1:
-                    roundTimeLeft = ROUND_TIME;
                     GetOpponentUnits(lastPlayerFought);
+                    syncTimer();
                     round++;
                     break;
                 // Battle
                 case 2:
-                    roundTimeLeft = ROUND_TIME;
                     round = 0;
+                    startTime = PhotonNetwork.time;
+                    currentRoundTime = ROUND_TIME;
                     break;
                 default:
                     break;
@@ -72,27 +77,25 @@ public class HexGM : Photon.MonoBehaviour
         }
     }
 
-    private void syncTimer()
+    private void UpdateTimer()
     {
         if (PhotonNetwork.player.IsMasterClient)
         {
-            Hashtable hash = new Hashtable();
-            hash.Add(TIMER_KEY, PhotonNetwork.time);
+            Hashtable hash = PhotonNetwork.room.CustomProperties;
+            startTime = PhotonNetwork.time;
+            hash[TIMER_KEY] = startTime;
             PhotonNetwork.room.SetCustomProperties(hash);
+        } else
+        {
+            startTime = PhotonNetwork.time;
         }
-        startTime = (double)PhotonNetwork.room.CustomProperties[TIMER_KEY];
-        roundTimeLeft = INTERMISSION_TIME - ((PhotonNetwork.time - startTime) / 1000);
-        Debug.Log(roundTimeLeft);
+        currentRoundTime = INTERMISSION_TIME;
     }
 
-    private void UpdateTimer()
+    private void syncTimer()
     {
-        // Only the master can update timer
-        roundTimeLeft -= Time.deltaTime;
-        Hashtable hash = PhotonNetwork.room.CustomProperties;
-        hash.Remove(TIMER_KEY);
-        hash.Add(TIMER_KEY, roundTimeLeft);
-        PhotonNetwork.room.SetCustomProperties(hash);
+        startTime = (double)PhotonNetwork.room.CustomProperties[TIMER_KEY] + INTERMISSION_TIME;
+        currentRoundTime = ROUND_TIME;
     }
 
     private void UpdateUnits()
@@ -168,7 +171,7 @@ public class HexGM : Photon.MonoBehaviour
 
     public static double getRoundTimer()
     {
-        return roundTimeLeft;
+        return currentRoundTime - timerIncrementValue;
     }
 
     private void getNextOpponentName()

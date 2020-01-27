@@ -17,6 +17,11 @@ public class PlayerNetwork : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneFinishedLoading;
     }
 
+    private void Start()
+    {
+        PhotonNetwork.LoadLevel(1);
+    }
+
     private void OnSceneFinishedLoading(Scene scene, LoadSceneMode mode)
     {
         if (scene.name == "Hexvasion")
@@ -46,7 +51,7 @@ public class PlayerNetwork : MonoBehaviour
     [PunRPC]
     private void RPC_LoadGameOthers()
     {
-        PhotonNetwork.LoadLevel(1);
+        PhotonNetwork.LoadLevel(2);
     }
 
     [PunRPC]

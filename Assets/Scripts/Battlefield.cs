@@ -10,7 +10,7 @@ public class Battlefield : MonoBehaviour
 
     // Start is called before the first frame update
     public GameObject ally, enemy;
-    public static Dictionary<string,BaseTileHandler> tileMap = new Dictionary<string, BaseTileHandler>();
+    public Dictionary<string,BaseTileHandler> tileMap = new Dictionary<string, BaseTileHandler>();
 
     void Start()
     {
@@ -197,7 +197,7 @@ public class Battlefield : MonoBehaviour
         {
             int dx = Mathf.Abs(end.x - start.x);
             int dy = Mathf.Abs(end.y - start.y);
-            if (start.y < end.y)
+            if (start.y > end.y)
                 return dx + dy - Mathf.CeilToInt(dx / 2.0f);
             else
                 return dx + dy -  Mathf.FloorToInt(dx / 2.0f);

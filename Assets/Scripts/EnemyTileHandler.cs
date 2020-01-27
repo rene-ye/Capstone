@@ -118,7 +118,15 @@ public class EnemyTileHandler : MonoBehaviour, BaseTileHandler
     {
         barsActive = b;
         healthBar.gameObject.SetActive(b);
-        manaBar.gameObject.SetActive(b);
+
+        if (!b)
+        {
+            manaBar.gameObject.SetActive(b);
+        }
+        else if (b && this.unit.mana > 0)
+        {
+            manaBar.gameObject.SetActive(b);
+        }
     }
 
     public bool setUnit(Unit u)
@@ -170,11 +178,11 @@ public class EnemyTileHandler : MonoBehaviour, BaseTileHandler
         }
     }
 
-    public void takeDamage(int attack)
+    public void takeDamage(Unit attacker)
     {
         if (!HexGM.isShoppingRound() && this.unit != null)
         {
-            unit.currentHealth -= attack;
+            attacker.dealDamage(this.unit);
             if (unit.currentHealth <= 0)
             {
                 this.resetDefault();

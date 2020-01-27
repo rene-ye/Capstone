@@ -48,7 +48,7 @@ public abstract class Unit
         return colors[tier -1];
     }
 
-    public void resetForCombat()
+    public virtual void resetForCombat()
     {
         currentHealth = health;
         currentMana = 0;
@@ -62,6 +62,17 @@ public abstract class Unit
             return true;
         }
         return false;
+    }
+
+    public virtual int takeDamage(int attack)
+    {
+        currentHealth -= attack;
+        return attack;
+    }
+
+    public virtual void dealDamage(Unit u)
+    {
+        u.takeDamage(attack);
     }
 }
 
@@ -339,7 +350,6 @@ public static class RandomUtils
 
 /*
  * Unit list starts here
- * 
  */
 public class Axe : Unit
 {
@@ -348,12 +358,32 @@ public class Axe : Unit
         unit_name = "Axe";
         unit_asset_location = "Tiles/Axe";
 
-        range = 3;
+        range = 1;
         cost = 1;
+        attackSpeed = 1.5f;
 
         health = 700;
-        attack = 60;
-        mana = 100;
+        attack = 50;
+        mana = 50;
+    }
+
+    public override void dealDamage(Unit u)
+    {
+        base.dealDamage(u);
+        if (currentMana < mana)
+            currentMana += 5;
+    }
+
+    public override int takeDamage(int attack)
+    {
+        if (currentMana < mana)
+        {
+            currentMana += 5;
+            return base.takeDamage(attack);
+        } else
+        {
+            return base.takeDamage(attack / 2);
+        }
     }
 }
 
@@ -364,12 +394,13 @@ public class Bounty : Unit
         unit_name = "Bounty";
         unit_asset_location = "Tiles/Bounty";
 
-        range = 3;
+        range = 1;
         cost = 1;
+        attackSpeed = 1.1f;
 
         health = 550;
-        attack = 85;
-        mana = 100;
+        attack = 70;
+        mana = 0;
     }
 }
 public class Ogre : Unit
@@ -379,12 +410,13 @@ public class Ogre : Unit
         unit_name = "Ogre";
         unit_asset_location = "Tiles/Ogre";
 
-        range = 3;
+        range = 1;
         cost = 1;
+        attackSpeed = 1.4f;
 
-        health = 550;
+        health = 700;
         attack = 85;
-        mana = 100;
+        mana = 0;
     }
 }
 public class Clock : Unit
@@ -394,12 +426,13 @@ public class Clock : Unit
         unit_name = "Clock";
         unit_asset_location = "Tiles/Clock";
 
-        range = 3;
+        range = 2;
         cost = 1;
+        attackSpeed = 1.4f;
 
-        health = 550;
-        attack = 85;
-        mana = 100;
+        health = 700;
+        attack = 55;
+        mana = 0;
     }
 }
 public class Walrus : Unit
@@ -411,10 +444,11 @@ public class Walrus : Unit
 
         range = 1;
         cost = 1;
+        attackSpeed = 1.2f;
 
-        health = 550;
-        attack = 85;
-        mana = 100;
+        health = 650;
+        attack = 55;
+        mana = 0;
     }
 }
 public class Inventor : Unit
@@ -424,12 +458,27 @@ public class Inventor : Unit
         unit_name = "Inventor";
         unit_asset_location = "Tiles/Inventor";
 
-        range = 1;
+        range = 3;
         cost = 1;
+        attackSpeed = 1.5f;
 
-        health = 550;
-        attack = 85;
-        mana = 100;
+        health = 400;
+        attack = 50;
+        mana = 20;
+    }
+
+    public override void dealDamage(Unit u)
+    {
+        if (currentMana < mana)
+        {
+            base.dealDamage(u);
+            currentMana += 5;
+        }
+        else
+        {
+            u.takeDamage(attack * 5);
+            currentMana = 0;
+        }
     }
 }
 public class Hunter : Unit
@@ -439,12 +488,13 @@ public class Hunter : Unit
         unit_name = "Hunter";
         unit_asset_location = "Tiles/Hunter";
 
-        range = 1;
+        range = 5;
         cost = 1;
+        attackSpeed = 1.3f;
 
-        health = 550;
-        attack = 85;
-        mana = 100;
+        health = 400;
+        attack = 50;
+        mana = 0;
     }
 }
 public class Exorcist : Unit
@@ -454,14 +504,55 @@ public class Exorcist : Unit
         unit_name = "Exorcist";
         unit_asset_location = "Tiles/Exorcist";
 
-        range = 1;
+        range = 3;
         cost = 1;
+        attackSpeed = 1.4f;
 
         health = 550;
-        attack = 85;
-        mana = 100;
+        attack = 75;
+        mana = 0;
     }
 }
+
+public class Enchantress : Unit
+{
+    public Enchantress()
+    {
+        unit_name = "Enchantress";
+        unit_asset_location = "Tiles/Enchantress";
+
+        range = 3;
+        cost = 1;
+        attackSpeed = 1.5f;
+
+        health = 400;
+        attack = 60;
+        mana = 100;
+    }
+
+    public override void dealDamage(Unit u)
+    {
+        if (currentMana < mana)
+        {
+            base.dealDamage(u);
+            currentMana += 5;
+        }
+        else
+        {
+            currentHealth += health / 10;
+            if (currentHealth > health)
+                currentHealth = health;
+            base.dealDamage(u);
+        }
+    }
+    public override int takeDamage(int attack)
+    {
+        if (currentMana < mana)
+            currentMana += 5;
+        return base.takeDamage(attack);
+    }
+}
+
 public class Rider : Unit
 {
     public Rider()
@@ -471,40 +562,65 @@ public class Rider : Unit
 
         range = 1;
         cost = 1;
+        attackSpeed = 1.5f;
 
-        health = 550;
-        attack = 85;
-        mana = 100;
+        health = 600;
+        attack = 80;
+        mana = 0;
     }
-}
-public class Enchantress : Unit
-{
-    public Enchantress()
+    public override void dealDamage(Unit u)
     {
-        unit_name = "Enchantress";
-        unit_asset_location = "Tiles/Enchantress";
-
-        range = 1;
-        cost = 1;
-
-        health = 550;
-        attack = 85;
-        mana = 100;
+        u.takeDamage(Mathf.CeilToInt(attack * 1.5f));
+    }
+    public override int takeDamage(int attack)
+    {
+        return base.takeDamage(Mathf.CeilToInt(attack * 1.5f));
     }
 }
 public class Maiden : Unit
 {
+    private Battlefield bf = null;
+
     public Maiden()
     {
         unit_name = "Maiden";
         unit_asset_location = "Tiles/Maiden";
 
-        range = 1;
+        range = 3;
         cost = 2;
+        attackSpeed = 1.7f;
 
-        health = 550;
-        attack = 85;
-        mana = 100;
+        health = 450;
+        attack = 45;
+        mana = 50;
+    }
+    public override void dealDamage(Unit u)
+    {
+        if (currentMana < mana)
+            currentMana += 5;
+        base.dealDamage(u);
+    }
+    public override int takeDamage(int attack)
+    {
+        if (currentMana < mana)
+            currentMana += 5;
+        else
+        {
+            if (bf == null)
+                bf = GameObject.Find("Board").GetComponent<Battlefield>();
+            foreach (BaseTileHandler b in bf.tileMap.Values)
+            {
+                Unit u = b.getCurrentUnit();
+                if (u != null && (u.isAlly == this.isAlly) && (u.mana > 0))
+                {
+                    u.currentMana += 50;
+                    if (u.currentMana > u.mana)
+                        u.currentMana = u.mana;
+                }
+            }
+            currentMana = 0;
+        }
+        return base.takeDamage(attack);
     }
 }
 public class Blademaster : Unit
@@ -516,10 +632,11 @@ public class Blademaster : Unit
 
         range = 1;
         cost = 2;
+        attackSpeed = 1.1f;
 
-        health = 550;
-        attack = 85;
-        mana = 100;
+        health = 600;
+        attack = 70;
+        mana = 0;
     }
 }
 public class Queen : Unit
@@ -529,12 +646,22 @@ public class Queen : Unit
         unit_name = "Queen";
         unit_asset_location = "Tiles/Queen";
 
-        range = 1;
+        range = 3;
         cost = 2;
+        attackSpeed = 1.2f;
 
         health = 550;
-        attack = 85;
-        mana = 100;
+        attack = 90;
+        mana = 0;
+    }
+
+    public override void dealDamage(Unit u)
+    {
+        u.takeDamage(Mathf.CeilToInt(attack * 1.5f));
+    }
+    public override int takeDamage(int attack)
+    {
+        return base.takeDamage(Mathf.CeilToInt(attack * 1.5f));
     }
 }
 public class Elemental : Unit
@@ -544,12 +671,13 @@ public class Elemental : Unit
         unit_name = "Elemental";
         unit_asset_location = "Tiles/Elemental";
 
-        range = 1;
+        range = 3;
         cost = 2;
+        attackSpeed = 1.3f;
 
         health = 550;
-        attack = 85;
-        mana = 100;
+        attack = 65;
+        mana = 0;
     }
 }
 public class Prophet : Unit
@@ -559,12 +687,13 @@ public class Prophet : Unit
         unit_name = "Prophet";
         unit_asset_location = "Tiles/Prophet";
 
-        range = 1;
+        range = 3;
         cost = 2;
+        attackSpeed = 1.4f;
 
-        health = 550;
-        attack = 85;
-        mana = 100;
+        health = 500;
+        attack = 50;
+        mana = 0;
     }
 }
 public class Fiend : Unit
@@ -574,12 +703,22 @@ public class Fiend : Unit
         unit_name = "Fiend";
         unit_asset_location = "Tiles/Fiend";
 
-        range = 1;
+        range = 3;
         cost = 3;
+        attackSpeed = 1.1f;
 
-        health = 550;
-        attack = 85;
-        mana = 100;
+        health = 500;
+        attack = 90;
+        mana = 0;
+    }
+
+    public override void dealDamage(Unit u)
+    {
+        u.takeDamage(Mathf.CeilToInt(attack * 2.0f));
+    }
+    public override int takeDamage(int attack)
+    {
+        return base.takeDamage(Mathf.CeilToInt(attack * 1.2f));
     }
 }
 public class Sniper : Unit
@@ -589,27 +728,48 @@ public class Sniper : Unit
         unit_name = "Sniper";
         unit_asset_location = "Tiles/Sniper";
 
-        range = 1;
+        range = 8;
         cost = 3;
+        attackSpeed = 1.1f;
 
-        health = 550;
+        health = 450;
         attack = 85;
-        mana = 100;
+        mana = 0;
     }
 }
 public class Gandalf : Unit
 {
+    private Battlefield bf = null;
+
     public Gandalf()
     {
         unit_name = "Gandalf";
         unit_asset_location = "Tiles/Gandalf";
 
-        range = 1;
+        range = 3;
         cost = 3;
+        attackSpeed = 1.7f;
 
-        health = 550;
-        attack = 85;
-        mana = 100;
+        health = 650;
+        attack = 50;
+        mana = 0;
+    }
+
+    public override void dealDamage(Unit unit)
+    {
+        if (bf == null)
+            bf = GameObject.Find("Board").GetComponent<Battlefield>();
+        foreach (BaseTileHandler b in bf.tileMap.Values)
+        {
+            Unit u = b.getCurrentUnit();
+            if (u != null && (u.isAlly == this.isAlly) && (u.mana > 0))
+            {
+                u.currentMana += 5;
+                if (u.currentMana > u.mana)
+                    u.currentMana = u.mana;
+            }
+        }
+        base.dealDamage(unit);
     }
 }
 public class Wolverine : Unit
@@ -621,10 +781,22 @@ public class Wolverine : Unit
 
         range = 1;
         cost = 3;
+        attackSpeed = 1.1f;
 
-        health = 550;
-        attack = 85;
-        mana = 100;
+        health = 750;
+        attack = 60;
+        mana = 0;
+    }
+
+    public override void dealDamage(Unit u)
+    {
+        currentHealth += Mathf.CeilToInt(u.takeDamage(attack) * 0.2f);
+        if (currentHealth > health)
+            currentHealth = health;
+    }
+    public override int takeDamage(int attack)
+    {
+        return base.takeDamage(Mathf.CeilToInt(attack * 0.8f));
     }
 }
 public class Admiral : Unit
@@ -636,10 +808,11 @@ public class Admiral : Unit
 
         range = 1;
         cost = 4;
+        attackSpeed = 1.4f;
 
-        health = 550;
-        attack = 85;
-        mana = 100;
+        health = 950;
+        attack = 90;
+        mana = 0;
     }
 }
 public class Troll : Unit
@@ -649,12 +822,28 @@ public class Troll : Unit
         unit_name = "Troll";
         unit_asset_location = "Tiles/Troll";
 
-        range = 1;
+        range = 2;
         cost = 4;
+        attackSpeed = 1.1f;
 
-        health = 550;
-        attack = 85;
-        mana = 100;
+        health = 900;
+        attack = 100;
+        mana = 0;
+    }
+
+    public override void dealDamage(Unit u)
+    {
+        base.dealDamage(u);
+        if (attackSpeed > 0.3f)
+        {
+            attackSpeed -= 0.1f;
+        }
+    }
+
+    public override void resetForCombat()
+    {
+        base.resetForCombat();
+        attackSpeed = 1.1f;
     }
 }
 public class Medusa : Unit
@@ -664,27 +853,59 @@ public class Medusa : Unit
         unit_name = "Medusa";
         unit_asset_location = "Tiles/Medusa";
 
-        range = 1;
+        range = 2;
         cost = 4;
+        attackSpeed = 1.0f;
 
-        health = 550;
-        attack = 85;
-        mana = 100;
+        health = 750;
+        attack = 70;
+        mana = 0;
     }
 }
 public class Zeus : Unit
 {
+    private Battlefield bf = null;
+
     public Zeus()
     {
         unit_name = "Zeus";
         unit_asset_location = "Tiles/Zeus";
 
-        range = 1;
+        range = 3;
         cost = 5;
+        attackSpeed = 1.4f;
 
-        health = 550;
-        attack = 85;
+        health = 950;
+        attack = 70;
         mana = 100;
+    }
+
+    public override void dealDamage(Unit unit)
+    {
+        if (currentMana < mana)
+            currentMana += 10;
+        else
+        {
+            if (bf == null)
+                bf = GameObject.Find("Board").GetComponent<Battlefield>();
+            foreach (BaseTileHandler b in bf.tileMap.Values)
+            {
+                Unit u = b.getCurrentUnit();
+                if (u != null && (u.isAlly != this.isAlly))
+                {
+                    float damage = 0.2f * tier;
+                    u.takeDamage(u.currentHealth - Mathf.CeilToInt(u.health * damage));
+                }
+                mana = 0;
+            }
+        }
+        base.dealDamage(unit);
+    }
+
+    public override int takeDamage(int attack)
+    {
+        mana += 10;
+        return base.takeDamage(attack);
     }
 }
 public class Dematerializer : Unit
@@ -694,11 +915,12 @@ public class Dematerializer : Unit
         unit_name = "Dematerializer";
         unit_asset_location = "Tiles/Dematerializer";
 
-        range = 1;
+        range = 3;
         cost = 5;
+        attackSpeed = 1.5f;
 
-        health = 550;
-        attack = 85;
-        mana = 100;
+        health = 1000;
+        attack = 150;
+        mana = 0;
     }
 }

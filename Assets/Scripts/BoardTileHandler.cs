@@ -71,8 +71,11 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
                 if (bthl != null)
                 {
                     BaseTileHandler bth = bthl[0];
-                    if (!(Battlefield.getDistance(this.coordinate, bth.getCoordinate()) <= unit.range))
+                    int distance = Battlefield.getDistance(this.coordinate, bth.getCoordinate());
+                    if (!(distance <= unit.range))
                     {
+                        Debug.Log(bth.getCurrentUnit().unit_name + " is out of range from " + unit.unit_name + ". " + distance);
+                        Debug.Log("Axe:" + this.coordinate.ToString() + " | Other: " + bth.getCoordinate());
                         // it's out of range, move instead, we already got the shortest path so try to move along the path
                         // the first unit is the target, so we want to start with the furthest possible range from the target
                         for (int i = unit.range; i > 0; i--)
@@ -81,8 +84,8 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
                             {
                                 if (bthl[i].setUnit(this.unit))
                                 {
-                                    Debug.Log("Moving Inside range");
                                     this.resetDefault();
+                                    Debug.Log(this.unit.unit_name + ": moving within range");
                                     return;
                                 }
                             }
@@ -93,8 +96,8 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
                             {
                                 if (bthl[i].setUnit(this.unit))
                                 {
-                                    Debug.Log("Moving outside range");
                                     this.resetDefault();
+                                    Debug.Log(this.unit.unit_name + ": moving outside range");
                                     return;
                                 }
                             }
@@ -125,7 +128,15 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
     {
         barsActive = b;
         healthBar.gameObject.SetActive(b);
-        manaBar.gameObject.SetActive(b);
+
+        if (!b)
+        {
+            manaBar.gameObject.SetActive(b);
+        }
+         else if (b && this.unit != null && this.unit.mana > 0)
+        {
+            manaBar.gameObject.SetActive(b);
+        }
     }
 
     public void onClick()
@@ -203,11 +214,11 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
         }
     }
 
-    public void takeDamage(int attack)
+    public void takeDamage(Unit attacker)
     {
         if (!HexGM.isShoppingRound() && this.unit != null)
         {
-            unit.currentHealth -= attack;
+            attacker.dealDamage(this.unit);
             if (unit.currentHealth <= 0)
             {
                 this.resetDefault();

@@ -26,7 +26,7 @@ public class BulletHandler : MonoBehaviour
         if (fractionOfJourney >= 1 && !destroyCalled)
         {
             destroyCalled = true;
-            target.takeDamage(origin.attack);
+            target.takeDamage(origin);
             // deal damage to target unit
             Destroy(this.gameObject);
         }
