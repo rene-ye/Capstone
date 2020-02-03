@@ -4,8 +4,7 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Bench
-  - Shop
+  - Tile
   layers:
   - Default
   - TransparentFX
@@ -15,14 +14,14 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player1
+  - Player2
+  - Player3
+  - Player4
+  - Player5
+  - Player6
+  - Player7
+  - Player8
   - 
   - 
   - 
