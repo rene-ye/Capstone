@@ -139,7 +139,7 @@ public class Battlefield : MonoBehaviour
         return null;
     }
 
-    static List<Vector2Int> findNeighbors(int x, int y)
+    public static List<Vector2Int> findNeighbors(int x, int y)
     {
         List<Vector2Int> l = new List<Vector2Int>();
         if (y > 0)
@@ -185,22 +185,30 @@ public class Battlefield : MonoBehaviour
     }
 
     /*
-     * Need a custom manhattan distance finder due to hex coordinate system
+     * Much more elegant to get the distance in a cube system than to hard code rules for an offset system.
+     * Convert the offset coordinates to cube and then just get the distance.
      */
     public static int getDistance(Vector2Int start, Vector2Int end)
     {
-        if (start.x == end.x)
-            return Mathf.Abs(end.y - start.y);
-        else if (start.y == end.y)
-            return Mathf.Abs(end.x - start.x);
-        else
-        {
-            int dx = Mathf.Abs(end.x - start.x);
-            int dy = Mathf.Abs(end.y - start.y);
-            if (start.y > end.y)
-                return dx + dy - Mathf.CeilToInt(dx / 2.0f);
-            else
-                return dx + dy -  Mathf.FloorToInt(dx / 2.0f);
-        }
+        return CubeDistance(OffsetToCube(start), OffsetToCube(end));
+    }
+
+    /*
+     * Convert the offset coordinate system to a cube coordinate system
+     */
+    private static Vector3Int OffsetToCube(Vector2Int v)
+    {
+        int x = v.x;
+        int z = v.y - (v.x - (v.x & 1)) / 2;
+        int y = -x - z;
+        return new Vector3Int(x, y, z);
+    }
+
+    /*
+     * Calculates the distance between 2 tiles in a cube system
+     */
+    private static int CubeDistance(Vector3Int start, Vector3Int end)
+    {
+        return (Math.Abs(start.x - end.x) + Math.Abs(start.y - end.y) + Math.Abs(start.z - end.z)) / 2;
     }
 }
