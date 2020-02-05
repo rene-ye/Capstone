@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class Field : MonoBehaviour
 {
+    private static Vector3 shopScale = new Vector3(1.5f, 1.5f, 1f);
+    private static Vector3 boardScale = Vector3.one;
+
+
     public Text roundText, timer;
     public GameObject shop;
 
@@ -33,15 +37,15 @@ public class Field : MonoBehaviour
         if (isShowing)
         {
             shop.transform.localScale = Vector3.zero;
-            ally.transform.localScale = Vector3.one;
+            ally.transform.localScale = boardScale;
             if (!HexGM.isShoppingRound())
             {
-                enemy.transform.localScale = Vector3.one;
+                enemy.transform.localScale = boardScale;
             }
         }
         else
         {
-            shop.transform.localScale = Vector3.one;
+            shop.transform.localScale = shopScale;
             ally.transform.localScale = Vector3.zero;
             if (!HexGM.isShoppingRound())
             {
@@ -84,7 +88,7 @@ public class Field : MonoBehaviour
         roundText.text = "Battle";
         if (isShowing)
         {
-            enemy.transform.localScale = Vector3.one;
+            enemy.transform.localScale = boardScale;
         }
     }
 

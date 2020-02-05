@@ -74,8 +74,6 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
                     int distance = Battlefield.getDistance(this.coordinate, bth.getCoordinate());
                     if (!(distance <= unit.range))
                     {
-                        Debug.Log(bth.getCurrentUnit().unit_name + " is out of range from " + unit.unit_name + ". " + distance);
-                        Debug.Log("Axe:" + this.coordinate.ToString() + " | Other: " + bth.getCoordinate());
                         // it's out of range, move instead, we already got the shortest path so try to move along the path
                         // the first unit is the target, so we want to start with the furthest possible range from the target
                         for (int i = unit.range; i > 0; i--)
@@ -85,7 +83,6 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
                                 if (bthl[i].setUnit(this.unit))
                                 {
                                     this.resetDefault();
-                                    Debug.Log(this.unit.unit_name + ": moving within range");
                                     return;
                                 }
                             }
@@ -97,7 +94,6 @@ public class BoardTileHandler : MonoBehaviour, BaseTileHandler
                                 if (bthl[i].setUnit(this.unit))
                                 {
                                     this.resetDefault();
-                                    Debug.Log(this.unit.unit_name + ": moving outside range");
                                     return;
                                 }
                             }
