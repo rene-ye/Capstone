@@ -64,7 +64,8 @@ public class EnemyTileHandler : MonoBehaviour, BaseTileHandler
                 if (bthl != null)
                 {
                     BaseTileHandler bth = bthl[0];
-                    if (!(Battlefield.getDistance(this.coordinate, bth.getCoordinate()) <= unit.range))
+                    int distance = Battlefield.getDistance(this.coordinate, bth.getCoordinate());
+                    if (!(distance <= unit.range))
                     {
                         // it's out of range, move instead, we already got the shortest path so try to move along the path
                         // the first unit is the target, so we want to start with the furthest possible range from the target
@@ -74,7 +75,6 @@ public class EnemyTileHandler : MonoBehaviour, BaseTileHandler
                             {
                                 if (bthl[i].setUnit(this.unit))
                                 {
-                                    Debug.Log("Moving Inside range");
                                     this.resetDefault();
                                     return;
                                 }
@@ -86,7 +86,6 @@ public class EnemyTileHandler : MonoBehaviour, BaseTileHandler
                             {
                                 if (bthl[i].setUnit(this.unit))
                                 {
-                                    Debug.Log("Moving outside range");
                                     this.resetDefault();
                                     return;
                                 }
