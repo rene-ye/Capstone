@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
     public Player()
     {
         level = 1;
-        gold = 30;
+        gold = 1;
         exp = 0;
     }
 
